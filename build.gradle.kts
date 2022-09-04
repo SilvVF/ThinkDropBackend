@@ -33,7 +33,10 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation("io.ktor:ktor-gson:$ktor_version")
     implementation("org.litote.kmongo:kmongo:4.7.0")
     implementation("org.litote.kmongo:kmongo-coroutine:4.7.0")
-    implementation("org.litote.kmongo:kmongo-async:4.7.0")
+    implementation("commons-codec:commons-codec:1.15")
+    implementation("io.ktor:ktor-network-tls:$ktor_version")
 }

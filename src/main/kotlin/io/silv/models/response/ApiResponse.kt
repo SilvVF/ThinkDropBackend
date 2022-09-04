@@ -1,4 +1,4 @@
-package io.silv.models
+package io.silv.models.response
 
 @kotlinx.serialization.Serializable
 data class ApiResponse(

@@ -35,6 +35,7 @@ fun main() {
         }
         install(Routing) {
             configureTaskRouting()
+            logInRoute()
         }
     }.start(wait = true)
 }
