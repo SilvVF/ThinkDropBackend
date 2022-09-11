@@ -37,6 +37,7 @@ dependencies {
     implementation("io.ktor:ktor-gson:$ktor_version")
     implementation("org.litote.kmongo:kmongo:4.7.0")
     implementation("org.litote.kmongo:kmongo-coroutine:4.7.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("commons-codec:commons-codec:1.15")
     implementation("io.ktor:ktor-network-tls:$ktor_version")
 }

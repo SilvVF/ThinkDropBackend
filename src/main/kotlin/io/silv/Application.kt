@@ -7,11 +7,12 @@ import io.ktor.server.auth.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.routing.*
-import io.silv.mongo.validateCredential
+import io.silv.mongo.checkPasswordForEmail
 import io.silv.routing.*
 import io.silv.util.ThinkDropTestDB
-import io.silv.util.basic_auth
+import kotlinx.serialization.json.Json
 import org.litote.kmongo.*
 
 
@@ -21,21 +22,34 @@ val db: MongoDatabase = client.getDatabase(ThinkDropTestDB)
 fun main() {
     embeddedServer(Netty, port = 8181, host = "0.0.0.0") {
         configureMonitoring()
+        install(DefaultHeaders)
+
         install(ContentNegotiation) {
-            json()
+            json(
+                Json { prettyPrint = true }
+            )
         }
-        install(Authentication) {
-            basic(basic_auth) {
-                validate {userPasswordCredential ->
-                    if(validateCredential(userPasswordCredential.name, userPasswordCredential.password)) {
-                        UserIdPrincipal(userPasswordCredential.name)
-                    } else null
-                }
-            }
+        install(Authentication) { //needs to come before any feature that uses authentication
+            configureAuth()
         }
         install(Routing) {
-            configureTaskRouting()
+            taskRoutes()
             logInRoute()
+            registerRoute()
         }
     }.start(wait = true)
+}
+
+
+private fun AuthenticationConfig.configureAuth() {
+    basic {  //with oauth open that
+        realm = "TaskServer" //name of server that will pop up in the browser
+        validate { credentials -> //need to check name and password and authenticate
+            val username = credentials.name
+            val password = credentials.password
+            if (checkPasswordForEmail(username, password)) {
+                UserIdPrincipal(username) //will be attached to the request can filter who is making the request and get their data
+            } else null
+        }
+    }
 }
